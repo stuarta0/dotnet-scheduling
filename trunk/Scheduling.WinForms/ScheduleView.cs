@@ -86,6 +86,9 @@ namespace Scheduling.WinForms
             if (fromDataSource)
             {
                 DateTime? toSet = CurrentSchedule.EndDate;
+                if (!toSet.HasValue && !NoEndDateAllowed)
+                    toSet = DateTime.Today;
+
                 chkEndOn.Checked = toSet.HasValue;
                 chkEndNever.Checked = !chkEndOn.Checked;
                 dtpEndDate.Value = (toSet.HasValue ? toSet.Value : DateTime.Today);
