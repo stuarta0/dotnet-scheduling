@@ -1,11 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduling", "Scheduling\Scheduling.csproj", "{BF1D0275-5EFA-4226-95AC-447FFFEC6D2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduling.Tests", "Scheduling.Tests\Scheduling.Tests.csproj", "{2EA236FB-7CE6-4679-A070-5D42883BA0FD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomControls", "CustomControls\CustomControls.csproj", "{2D872648-FB47-487C-942C-FD71A67C54E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduling.WinForms", "Scheduling.WinForms\Scheduling.WinForms.csproj", "{FCA0A901-2160-44B3-8ABA-E1AA8CCCD81B}"
 EndProject
@@ -23,10 +21,6 @@ Global
 		{2EA236FB-7CE6-4679-A070-5D42883BA0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EA236FB-7CE6-4679-A070-5D42883BA0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EA236FB-7CE6-4679-A070-5D42883BA0FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D872648-FB47-487C-942C-FD71A67C54E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D872648-FB47-487C-942C-FD71A67C54E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D872648-FB47-487C-942C-FD71A67C54E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D872648-FB47-487C-942C-FD71A67C54E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FCA0A901-2160-44B3-8ABA-E1AA8CCCD81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCA0A901-2160-44B3-8ABA-E1AA8CCCD81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCA0A901-2160-44B3-8ABA-E1AA8CCCD81B}.Release|Any CPU.ActiveCfg = Release|Any CPU

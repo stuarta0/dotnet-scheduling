@@ -11,10 +11,36 @@ namespace Scheduling.WinForms
 {
     public partial class ScheduleView : UserControl, IScheduleView 
     {
+        private bool _noEndAllowed;
+        public bool NoEndDateAllowed
+        {
+            get { return _noEndAllowed; }
+            set
+            {
+                if (_noEndAllowed == value)
+                    return;
+
+                _noEndAllowed = value;
+
+                chkEndNever.Visible = _noEndAllowed;
+                chkEndOn.Visible = _noEndAllowed;
+                lblEnding.Text = (_noEndAllowed ? "Ending:" : "Ending On:");
+
+                if (!_noEndAllowed)
+                {
+                    chkEndNever.Checked = false;
+                    chkEndOn.Checked = true;
+                }
+
+                dtpEndDate.Enabled = chkEndOn.Checked;
+            }
+        }
+
         public ScheduleView()
         {
             InitializeComponent();
 
+            NoEndDateAllowed = true;
             Binding b = lblPeriod.DataBindings["Text"];
             b.Format += new ConvertEventHandler(Period_Format);
         }
@@ -67,13 +93,9 @@ namespace Scheduling.WinForms
             else
             {
                 if (chkEndOn.Checked)
-                {
                     _schedule.EndDate = dtpEndDate.Value;
-                }
                 else
-                {
                     _schedule.EndDate = null;
-                }
             }
         }
 
@@ -126,6 +148,8 @@ namespace Scheduling.WinForms
         #region IScheduleView Members
 
         private Schedule _schedule = null;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual Schedule CurrentSchedule
         {
             get
