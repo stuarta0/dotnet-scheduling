@@ -152,6 +152,13 @@ namespace Scheduling.WinForms
 
         private Schedule _schedule = null;
 
+        public event EventHandler CurrentScheduleChanged;
+        protected virtual void OnCurrentScheduleChanged()
+        {
+            if (CurrentScheduleChanged != null)
+                CurrentScheduleChanged(this, EventArgs.Empty);
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual Schedule CurrentSchedule
         {
@@ -177,6 +184,7 @@ namespace Scheduling.WinForms
                 }
 
                 this.Enabled = (_schedule != null);
+                OnCurrentScheduleChanged();
             }
         }
 

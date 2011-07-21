@@ -24,6 +24,13 @@ namespace Scheduling.WinForms
 
         private MonthlySchedule _schedule = null;
 
+        public event EventHandler CurrentScheduleChanged;
+        protected virtual void OnCurrentScheduleChanged()
+        {
+            if (CurrentScheduleChanged != null)
+                CurrentScheduleChanged(this, EventArgs.Empty);
+        }
+
         /// <summary>
         /// Gets or sets the schedule object.  Null will disable the control.  Must be of type WeeklySchedule.
         /// </summary>
@@ -48,6 +55,7 @@ namespace Scheduling.WinForms
                 }
 
                 this.Enabled = (_schedule != null);
+                OnCurrentScheduleChanged();
             }
         }
 
