@@ -26,13 +26,8 @@ namespace Scheduling.WinForms
                 chkEndOn.Visible = _noEndAllowed;
                 lblEnding.Text = (_noEndAllowed ? "Ending:" : "Ending On:");
 
-                if (!_noEndAllowed)
-                {
-                    chkEndNever.Checked = false;
-                    chkEndOn.Checked = true;
-                }
-
-                dtpEndDate.Enabled = chkEndOn.Checked;
+                if (!_noEndAllowed && CurrentSchedule != null)
+                    CurrentSchedule.EndDate = DateTime.Today;
             }
         }
 
@@ -41,8 +36,75 @@ namespace Scheduling.WinForms
             InitializeComponent();
 
             NoEndDateAllowed = true;
-            Binding b = lblPeriod.DataBindings["Text"];
-            b.Format += new ConvertEventHandler(Period_Format);
+            lblPeriod.DataBindings["Text"].Format += new ConvertEventHandler(Period_Format);
+
+            chkEndNever.DataBindings["Checked"].Format += new ConvertEventHandler(CheckBoxNeverEnd_Format);
+            chkEndNever.DataBindings["Checked"].Parse += new ConvertEventHandler(CheckBoxNeverEnd_Parse);
+
+            chkEndOn.DataBindings["Checked"].Format += new ConvertEventHandler(CheckBoxEndOn_Format);
+            chkEndOn.DataBindings["Checked"].Parse += new ConvertEventHandler(CheckBoxEndOn_Parse);
+
+            dtpEndDate.DataBindings["Value"].Format += new ConvertEventHandler(EndDate_Format);
+            dtpEndDate.DataBindings["Enabled"].Format += new ConvertEventHandler(EndDate_Format);
+        }
+
+        #region Binding Event Handlers
+
+        void EndDate_Format(object sender, ConvertEventArgs e)
+        {
+            // from object to control
+            DateTime? val = e.Value as DateTime?;
+
+            // if desired type is DateTime then we're binding Value
+            // if desired type is Boolean then we're binding Enabled
+            if (e.DesiredType == typeof(DateTime))
+                e.Value = (val.HasValue ? e.Value : dtpEndDate.Value);
+            else if (e.DesiredType == typeof(bool))
+                e.Value = val.HasValue;
+        }
+
+        void CheckBoxNeverEnd_Parse(object sender, ConvertEventArgs e)
+        {
+            // from control to object
+            if (e.DesiredType == typeof(DateTime?) && e.Value is bool)
+            {
+                //e.Value = ((bool)e.Value == true ? (DateTime?)null : DateTime.Today);
+                if ((bool)e.Value == true)
+                    e.Value = null;
+                else
+                    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
+            }
+        }
+
+        void CheckBoxNeverEnd_Format(object sender, ConvertEventArgs e)
+        {
+            // from object to control
+
+            // Never Ending should be checked when there is no end date
+            if (e.DesiredType == typeof(bool))
+                e.Value = (e.Value == null);
+        }
+
+        void CheckBoxEndOn_Parse(object sender, ConvertEventArgs e)
+        {
+            // from control to object
+            if (e.DesiredType == typeof(DateTime?) && e.Value is bool)
+            {
+                //e.Value = ((bool)e.Value == true ? DateTime.Today : (DateTime?)null);
+                if ((bool)e.Value == true)
+                    e.Value = dtpEndDate.Value;
+                else
+                    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
+            }
+        }
+
+        void CheckBoxEndOn_Format(object sender, ConvertEventArgs e)
+        {
+            // from object to control
+
+            // Ending On should be checked when there is an end date
+            if (e.DesiredType == typeof(bool))
+                e.Value = (e.Value != null);
         }
 
         void Period_Format(object sender, ConvertEventArgs e)
@@ -54,6 +116,9 @@ namespace Scheduling.WinForms
             }
         }
 
+        #endregion
+
+
         public void SetOptions(IEnumerable<ScheduleDisplayOption> options)
         {
             if (options == null)
@@ -62,54 +127,43 @@ namespace Scheduling.WinForms
             bsTypes.DataSource = options;
 
             IEnumerator<ScheduleDisplayOption> enumerator = options.GetEnumerator();
-            if (enumerator.MoveNext())
-                SetSchedule(enumerator.Current);
-        }
-
-
-        private void chkEndOn_CheckedChanged(object sender, EventArgs e)
-        {
-            dtpEndDate.Enabled = chkEndOn.Checked;
-            SetEndDate(false);
-        }
-
-        private void dtpEndDate_ValueChanged(object sender, EventArgs e)
-        {
-            SetEndDate(false);
-        }
-
-        private void SetEndDate(bool fromDataSource)
-        {
-            if (_schedule == null)
-                return;
-
-            if (fromDataSource)
+            ScheduleDisplayOption toSet = null;
+            for (int i = 0; enumerator.MoveNext(); i++)
             {
-                DateTime? toSet = CurrentSchedule.EndDate;
-                if (!toSet.HasValue && !NoEndDateAllowed)
-                    toSet = DateTime.Today;
+                if (i == 0)
+                    toSet = enumerator.Current;
 
-                chkEndOn.Checked = toSet.HasValue;
-                chkEndNever.Checked = !chkEndOn.Checked;
-                dtpEndDate.Value = (toSet.HasValue ? toSet.Value : DateTime.Today);
+                if (CurrentSchedule != null && enumerator.Current.ScheduleType == CurrentSchedule.GetType())
+                {
+                    toSet = enumerator.Current;
+                    break;
+                }
             }
+
+            if (CurrentSchedule == null)
+                CreateSchedule(toSet);
             else
             {
-                if (chkEndOn.Checked)
-                    _schedule.EndDate = dtpEndDate.Value;
-                else
-                    _schedule.EndDate = null;
+                _typeComboCanCreate = false;
+                cboType.SelectedItem = toSet;
+                _typeComboCanCreate = true;
+
+                RebuildUI(toSet);
             }
         }
 
         private void cboType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cboType.SelectedItem is ScheduleDisplayOption)
-                SetSchedule((ScheduleDisplayOption)cboType.SelectedItem);
+            if (_typeComboCanCreate && cboType.SelectedItem is ScheduleDisplayOption)
+                CreateSchedule((ScheduleDisplayOption)cboType.SelectedItem);
         }
 
-        private void SetSchedule(ScheduleDisplayOption option)
+        private void CreateSchedule(ScheduleDisplayOption option)
         {
+            DateTime? existingStartDate = null;
+            if (CurrentSchedule != null)
+                existingStartDate = CurrentSchedule.StartDate;
+
             try
             {
                 CurrentSchedule = option.CreateSchedule();
@@ -120,6 +174,17 @@ namespace Scheduling.WinForms
                 return;
             }
 
+            if (existingStartDate.HasValue)
+                CurrentSchedule.StartDate = existingStartDate.Value;
+
+            if (!NoEndDateAllowed)
+                CurrentSchedule.EndDate = dtpEndDate.Value;
+
+            RebuildUI(option);
+        }   
+
+        private void RebuildUI(ScheduleDisplayOption option)
+        {
             // unload the last control
             Control last = tblSchedule.GetControlFromPosition(1, 5);
             if (last != null)
@@ -127,6 +192,9 @@ namespace Scheduling.WinForms
                 tblSchedule.Controls.Remove(last);
                 last.Dispose();
             }
+
+            if (option == null)
+                return;
 
             // load the custom control for specifics of this schedule type if necessary
             if (option.ControlType != null)
@@ -150,6 +218,7 @@ namespace Scheduling.WinForms
 
         #region IScheduleView Members
 
+        private bool _typeComboCanCreate = true;
         private Schedule _schedule = null;
 
         public event EventHandler CurrentScheduleChanged;
@@ -168,6 +237,8 @@ namespace Scheduling.WinForms
             }
             set
             {
+                _typeComboCanCreate = false;
+
                 if (_schedule != null)
                     _schedule.PropertyChanged -= new PropertyChangedEventHandler(Schedule_PropertyChanged);
 
@@ -175,16 +246,31 @@ namespace Scheduling.WinForms
                 if (_schedule == null)
                 {
                     bsSchedule.DataSource = typeof(Schedule);
+                    cboType.SelectedItem = null;
                 }
                 else
                 {
                     bsSchedule.DataSource = _schedule;
                     _schedule.PropertyChanged += new PropertyChangedEventHandler(Schedule_PropertyChanged);
-                    SetEndDate(true);
+
+                    cboType.SelectedItem = null;
+                    foreach (ScheduleDisplayOption option in cboType.Items)
+                    {
+                        if (option.ScheduleType == _schedule.GetType())
+                        {
+                            cboType.SelectedItem = option;
+                            break;
+                        }
+                    }
+
+                    //SetEndDate(true);
                 }
 
                 this.Enabled = (_schedule != null);
                 OnCurrentScheduleChanged();
+                _typeComboCanCreate = true;
+
+                RebuildUI(cboType.SelectedItem as ScheduleDisplayOption);
             }
         }
 
@@ -192,7 +278,7 @@ namespace Scheduling.WinForms
         {
             if (e.PropertyName == "EndDate")
             {
-                SetEndDate(true);
+                //SetEndDate(true);
             }
         }
 

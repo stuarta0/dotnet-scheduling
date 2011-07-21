@@ -168,6 +168,7 @@
             this.chkEndNever.AutoSize = true;
             this.chkEndNever.Checked = true;
             this.tblEnding.SetColumnSpan(this.chkEndNever, 2);
+            this.chkEndNever.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bsSchedule, "EndDate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkEndNever.Location = new System.Drawing.Point(3, 3);
             this.chkEndNever.Name = "chkEndNever";
             this.chkEndNever.Size = new System.Drawing.Size(54, 17);
@@ -180,24 +181,25 @@
             // 
             this.chkEndOn.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.chkEndOn.AutoSize = true;
+            this.chkEndOn.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bsSchedule, "EndDate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkEndOn.Location = new System.Drawing.Point(3, 27);
             this.chkEndOn.Name = "chkEndOn";
             this.chkEndOn.Size = new System.Drawing.Size(39, 17);
             this.chkEndOn.TabIndex = 0;
             this.chkEndOn.Text = "On";
             this.chkEndOn.UseVisualStyleBackColor = true;
-            this.chkEndOn.CheckedChanged += new System.EventHandler(this.chkEndOn_CheckedChanged);
             // 
             // dtpEndDate
             // 
             this.dtpEndDate.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.dtpEndDate.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.bsSchedule, "EndDate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.dtpEndDate.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bsSchedule, "EndDate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.dtpEndDate.Enabled = false;
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpEndDate.Location = new System.Drawing.Point(48, 26);
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(110, 20);
             this.dtpEndDate.TabIndex = 1;
-            this.dtpEndDate.ValueChanged += new System.EventHandler(this.dtpEndDate_ValueChanged);
             // 
             // tblPeriod
             // 
