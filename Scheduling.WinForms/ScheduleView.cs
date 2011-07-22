@@ -118,6 +118,17 @@ namespace Scheduling.WinForms
 
         #endregion
 
+        #region Event Handlers
+
+        private void cboType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_typeComboCanCreate && cboType.SelectedItem is ScheduleDisplayOption)
+                CreateSchedule((ScheduleDisplayOption)cboType.SelectedItem);
+        }
+
+        #endregion
+
+        #region Functions
 
         public void SetOptions(IEnumerable<ScheduleDisplayOption> options)
         {
@@ -150,12 +161,6 @@ namespace Scheduling.WinForms
 
                 RebuildUI(toSet);
             }
-        }
-
-        private void cboType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_typeComboCanCreate && cboType.SelectedItem is ScheduleDisplayOption)
-                CreateSchedule((ScheduleDisplayOption)cboType.SelectedItem);
         }
 
         private void CreateSchedule(ScheduleDisplayOption option)
@@ -215,6 +220,9 @@ namespace Scheduling.WinForms
                 ((IScheduleView)extra).CurrentSchedule = CurrentSchedule;
             }
         }
+
+        #endregion
+
 
         #region IScheduleView Members
 
