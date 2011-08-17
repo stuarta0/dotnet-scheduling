@@ -269,6 +269,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 5, 7), occurrences[1]);
             Assert.AreEqual(new DateTime(2010, 6, 4), occurrences[2]);
         }
+
         [Test]
         public void Occurrences_day_of_week_first_monday()
         {
@@ -279,6 +280,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 4, 5), occurrences[0]);
             Assert.AreEqual(new DateTime(2010, 6, 7), occurrences[1]);
         }
+
         [Test]
         public void Occurrences_day_of_week_second_thursday()
         {
@@ -290,6 +292,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 5, 13), occurrences[1]);
             Assert.AreEqual(new DateTime(2010, 6, 10), occurrences[2]);
         }
+
         [Test]
         public void Occurrences_day_of_week_second_sunday()
         {
@@ -300,6 +303,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 4, 11), occurrences[0]);
             Assert.AreEqual(new DateTime(2010, 6, 13), occurrences[1]);
         }
+
         [Test]
         public void Occurrences_day_of_week_third_saturday()
         {
@@ -311,6 +315,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 5, 15), occurrences[1]);
             Assert.AreEqual(new DateTime(2010, 6, 19), occurrences[2]);
         }
+
         [Test]
         public void Occurrences_day_of_week_third_wednesday()
         {
@@ -321,6 +326,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 4, 21), occurrences[0]);
             Assert.AreEqual(new DateTime(2010, 6, 16), occurrences[1]);
         }
+
         [Test]
         public void Occurrences_day_of_week_fourth_friday()
         {
@@ -354,6 +360,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 5, 29), occurrences[1]); // last
             Assert.AreEqual(new DateTime(2010, 6, 26), occurrences[2]); // 4th + last
         }
+
         [Test]
         public void Occurrences_day_of_week_last_tuesday()
         {
@@ -364,6 +371,7 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 4, 27), occurrences[0]); // 4th + last
             Assert.AreEqual(new DateTime(2010, 6, 29), occurrences[1]); // last
         }
+
         [Test]
         public void Occurrences_day_of_week_last_friday()
         {
@@ -374,6 +382,52 @@ namespace Scheduling.Tests
             Assert.AreEqual(new DateTime(2010, 4, 30), occurrences[0]); // last
             Assert.AreEqual(new DateTime(2010, 5, 28), occurrences[1]); // 4th + last
             Assert.AreEqual(new DateTime(2010, 6, 25), occurrences[2]); // 4th + last
+        }
+
+
+        [Test]
+        public void Occurrences_day_of_month_first_with_time_component()
+        {
+            MonthlySchedule month = new MonthlySchedule { StartDate = new DateTime(2011, 8, 1, 14, 30, 0), Frequency = 1, ReoccurrenceType = MonthlySchedule.Type.DayOfMonth };
+            IList<DateTime> occurrences = month.GetOccurences(new DateTime(2011, 8, 17), new DateTime(2011, 10, 1, 11, 0, 0));
+
+            Assert.AreEqual(1, occurrences.Count);
+            Assert.AreEqual(new DateTime(2011, 9, 1, 14, 30, 0), occurrences[0]);
+        }
+
+        [Test]
+        public void Occurrences_day_of_week_first_tuesday_with_time_component()
+        {
+            MonthlySchedule month = new MonthlySchedule { StartDate = new DateTime(2011, 8, 2, 14, 30, 0), Frequency = 1, ReoccurrenceType = MonthlySchedule.Type.DayOfWeek };
+            IList<DateTime> occurrences = month.GetOccurences(new DateTime(2011, 8, 17), new DateTime(2011, 11, 1, 11, 0, 0));
+
+            Assert.AreEqual(2, occurrences.Count);
+            Assert.AreEqual(new DateTime(2011, 9, 6, 14, 30, 0), occurrences[0]);
+            Assert.AreEqual(new DateTime(2011, 10, 4, 14, 30, 0), occurrences[1]);
+        }
+
+        [Test]
+        public void Occurrences_day_of_week_first_tuesday_with_time_component_afternoon()
+        {
+            MonthlySchedule month = new MonthlySchedule { StartDate = new DateTime(2011, 8, 2, 14, 30, 0), Frequency = 1, ReoccurrenceType = MonthlySchedule.Type.DayOfWeek };
+            IList<DateTime> occurrences = month.GetOccurences(new DateTime(2011, 8, 17), new DateTime(2011, 11, 1, 15, 0, 0));
+
+            Assert.AreEqual(3, occurrences.Count);
+            Assert.AreEqual(new DateTime(2011, 9, 6, 14, 30, 0), occurrences[0]);
+            Assert.AreEqual(new DateTime(2011, 10, 4, 14, 30, 0), occurrences[1]);
+            Assert.AreEqual(new DateTime(2011, 11, 1, 14, 30, 0), occurrences[2]);
+        }
+
+        [Test]
+        public void Occurrences_day_of_week_first_tuesday_without_time_component_afternoon()
+        {
+            MonthlySchedule month = new MonthlySchedule { StartDate = new DateTime(2011, 8, 2), Frequency = 1, ReoccurrenceType = MonthlySchedule.Type.DayOfWeek };
+            IList<DateTime> occurrences = month.GetOccurences(new DateTime(2011, 8, 17), new DateTime(2011, 11, 1));
+
+            Assert.AreEqual(3, occurrences.Count);
+            Assert.AreEqual(new DateTime(2011, 9, 6), occurrences[0]);
+            Assert.AreEqual(new DateTime(2011, 10, 4), occurrences[1]);
+            Assert.AreEqual(new DateTime(2011, 11, 1), occurrences[2]);
         }
     }
 }

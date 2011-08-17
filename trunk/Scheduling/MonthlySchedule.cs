@@ -97,6 +97,11 @@ namespace Scheduling
                 // modify start if the requested start is before the scheduled start
                 start = StartDate;
             }
+            else
+            {
+                // start date between start and end of schedule
+                start = start.Date.Add(StartDate.TimeOfDay);
+            }
 
             // limit the end to either the parameter value or when this schedule ends
             if (EndDate.HasValue && EndDate < end)
@@ -105,7 +110,8 @@ namespace Scheduling
             // add dates to the list until we reach the requested end
             int week = GetWeek(StartDate);
             DateTime cur = StartDate;
-            while (cur <= end)
+            DateTime loopEnd = end.AddMonths(1);
+            while (cur <= loopEnd)
             {
                 if (_type == Type.DayOfMonth)
                 {
@@ -140,9 +146,9 @@ namespace Scheduling
             if (weekNumber >= 5)
                 return CalculateDate(1, dow, first.AddMonths(1)).AddDays(-7);
             else if (dow < first.DayOfWeek)
-                return first.AddDays(((weekNumber - 1) * 7) + (7 - Math.Abs(dow - first.DayOfWeek)));
+                return first.AddDays(((weekNumber - 1) * 7) + (7 - Math.Abs(dow - first.DayOfWeek))).Add(target.TimeOfDay);
             else
-                return first.AddDays(((weekNumber - 1) * 7) + Math.Abs(first.DayOfWeek - dow));
+                return first.AddDays(((weekNumber - 1) * 7) + Math.Abs(first.DayOfWeek - dow)).Add(target.TimeOfDay);
         }
     }
 }

@@ -41,9 +41,21 @@ namespace Scheduling
             {
                 // the requested start is within the schedule, so calculate the corresponding start based on 
                 // how far through two of the scheduled dates we are
-                int rollover = ((int)Math.Floor((start - StartDate).TotalDays)) % Frequency;
+
+                // if the parameter start time is after the schedule start time, perform calculations starting tomorrow
+                if (start.TimeOfDay > StartDate.TimeOfDay)
+                    start = start.AddDays(1);
+
+                // now wipe out time component as we will use the schedule's StartDate time of day and we don't want
+                // the time of day during our following calculations
+                start = start.Date; 
+
+                int rollover = ((int)Math.Floor((start - StartDate.Date).TotalDays)) % Frequency;
                 if (rollover > 0)
                     start = start.AddDays(Frequency - rollover);
+
+                // now restore time to what StartDate says it should be
+                start = start.Date.Add(StartDate.TimeOfDay);
             }
 
             // limit the end to either the parameter value or when this schedule ends
