@@ -204,11 +204,24 @@ namespace Scheduling
             {
                 // the requested start is within the schedule, so calculate the corresponding start based on 
                 // how far through two of the scheduled dates we are
-                rollover = ((int)Math.Floor((start - StartDate).TotalDays)) % (Frequency * 7);
+
+                // if the parameter start time is after the schedule start time, perform calculations starting tomorrow
+                if (start.TimeOfDay > StartDate.TimeOfDay)
+                    start = start.AddDays(1);
+
+                // now wipe out time component as we will use the schedule's StartDate time of day and we don't want
+                // the time of day during our following calculations
+                start = start.Date; 
+
+                rollover = ((int)Math.Floor((start - StartDate.Date).TotalDays)) % (Frequency * 7);
                 if (rollover > 0)
-                    cur = start.AddDays((Frequency * 7) - rollover);
+                    cur = start.AddDays(-rollover);
                 else
                     cur = start;
+
+                // now restore time to what StartDate says it should be
+                start = start.Add(StartDate.TimeOfDay);
+                cur = cur.Add(StartDate.TimeOfDay);
             }
 
             // limit the end to either the parameter value or when this schedule ends
@@ -218,7 +231,7 @@ namespace Scheduling
             // we must also ensure that the loop to calculate the days goes all the way to the next 
             // whole reoccurrence just in case there are days earlier in the week that would still be 
             // included even if the reoccurrence day is later in the week
-            rollover = ((int)Math.Floor((end - StartDate).TotalDays)) % (Frequency * 7);
+            rollover = ((int)Math.Floor((end - StartDate.Date).TotalDays)) % (Frequency * 7);
             if (rollover > 0)
                 lastPeriod = end.AddDays((Frequency * 7) - rollover);
             else

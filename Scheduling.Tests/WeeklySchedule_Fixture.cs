@@ -132,5 +132,32 @@ namespace Scheduling.Tests
 
             Assert.IsFalse(next.HasValue);
         }
+
+        [Test]
+        public void Occurrences_with_time()
+        {
+            // 17/8 14:30, 19/8 14:30 -> 22/8 14:30
+            WeeklySchedule week = new WeeklySchedule { StartDate = new DateTime(2011, 8, 1, 14, 30, 0), Frequency = 1, Monday = true, Wednesday = true, Friday = true, EndDate = new DateTime(2011, 8, 24, 11, 0, 0) };
+            IList<DateTime> occurrences = week.GetOccurences(new DateTime(2011, 8, 17, 0, 0, 0), week.EndDate.Value);
+
+            Assert.AreEqual(3, occurrences.Count);
+            Assert.AreEqual(occurrences[0], new DateTime(2011, 8, 17, 14, 30, 0));
+            Assert.AreEqual(occurrences[1], new DateTime(2011, 8, 19, 14, 30, 0));
+            Assert.AreEqual(occurrences[2], new DateTime(2011, 8, 22, 14, 30, 0));
+        }
+
+        [Test]
+        public void Occurrences_without_time()
+        {
+            // 17/8, 19/8 -> 22/8, 24/8
+            WeeklySchedule week = new WeeklySchedule { StartDate = new DateTime(2011, 8, 1), Frequency = 1, Monday = true, Wednesday = true, Friday = true, EndDate = new DateTime(2011, 8, 24) };
+            IList<DateTime> occurrences = week.GetOccurences(new DateTime(2011, 8, 17), week.EndDate.Value);
+
+            Assert.AreEqual(4, occurrences.Count);
+            Assert.AreEqual(occurrences[0], new DateTime(2011, 8, 17));
+            Assert.AreEqual(occurrences[1], new DateTime(2011, 8, 19));
+            Assert.AreEqual(occurrences[2], new DateTime(2011, 8, 22));
+            Assert.AreEqual(occurrences[3], new DateTime(2011, 8, 24));
+        }
     }
 }

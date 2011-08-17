@@ -100,6 +100,18 @@ namespace Scheduling.Tests
         }
 
         [Test]
+        public void Occurrences_with_time()
+        {
+            // 3/11/1983, 3/11/1990, 3/11/1997, 3/11/2004, 3/11/2011, 3/11/2018, 3/11/2026
+            YearlySchedule year = new YearlySchedule { StartDate = new DateTime(1983, 11, 3, 18, 0, 0), Frequency = 7, EndDate = new DateTime(2015, 12, 31) };
+            IList<DateTime> occurrences = year.GetOccurences(new DateTime(2004, 11, 3, 14, 0, 0), new DateTime(2020, 1, 1));
+
+            Assert.AreEqual(2, occurrences.Count);
+            Assert.AreEqual(new DateTime(2004, 11, 3, 18, 0, 0), occurrences[0]);
+            Assert.AreEqual(new DateTime(2011, 11, 3, 18, 0, 0), occurrences[1]);
+        }
+
+        [Test]
         public void Next_occurrence_before_start()
         {
             // 3/11/1983, 3/11/1990, 3/11/1997, 3/11/2004, 3/11/2011, 3/11/2018, 3/11/2026
