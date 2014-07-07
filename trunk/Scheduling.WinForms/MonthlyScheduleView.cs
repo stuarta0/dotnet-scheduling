@@ -17,7 +17,7 @@ namespace Scheduling.WinForms
         public MonthlyScheduleView()
         {
             InitializeComponent();
-            radioPanel.EnumType = typeof(MonthlySchedule.Type);
+            radioPanel.EnumType = typeof(MonthlySchedule.IntervalType);
         }
 
         #region IScheduleView Members
@@ -63,14 +63,14 @@ namespace Scheduling.WinForms
 
         private void radioPanel_FormatEnum(object sender, CustomControls.FormatEventArgs e)
         {
-            if (e.Source is MonthlySchedule.Type)
+            if (e.Source is MonthlySchedule.IntervalType)
             {
-                switch ((MonthlySchedule.Type)e.Source)
+                switch ((MonthlySchedule.IntervalType)e.Source)
                 {
-                    case MonthlySchedule.Type.DayOfMonth:
+                    case MonthlySchedule.IntervalType.DayOfMonth:
                         e.Target = "Day of month";
                         break;
-                    case MonthlySchedule.Type.DayOfWeek:
+                    case MonthlySchedule.IntervalType.DayOfWeek:
                         e.Target = "Day of week";
                         break;
                     default:

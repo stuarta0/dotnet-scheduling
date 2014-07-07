@@ -70,7 +70,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OneOffSchedule_Fixture.cs" />
+    <Compile Include="MonthlyDaySchedule_Fixture.cs" />
+    <Compile Include="TestBase.cs" />
     <Compile Include="YearlySchedule_Fixture.cs" />
     <Compile Include="MonthlySchedule_Fixture.cs" />
     <Compile Include="WeeklySchedule_Fixture.cs" />
