@@ -7,10 +7,10 @@ namespace Scheduling
 {
     public interface IScheduleVisitor
     {
-        /// <summary>
-        /// Visit a schedule to perform some logic with it.
-        /// </summary>
-        /// <param name="schedule"></param>
-        void Visit(ISchedule schedule);
+        void Visit(DailySchedule schedule);
+        void Visit(WeeklySchedule schedule);
+        void Visit(MonthlySchedule schedule);
+        void Visit(MonthlyDaySchedule schedule);
+        void Visit(YearlySchedule schedule);
     }
 }

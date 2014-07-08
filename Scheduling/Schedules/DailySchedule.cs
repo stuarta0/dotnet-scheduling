@@ -5,8 +5,16 @@ using System.Text;
 
 namespace Scheduling
 {
+    /// <summary>
+    /// Represents a schedule that occurs every X days.
+    /// </summary>
     public class DailySchedule : Schedule
     {
+        public override void Accept(IScheduleVisitor entity)
+        {
+            entity.Visit(this);
+        }
+
         public override IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from)
         {
             // limit from to start

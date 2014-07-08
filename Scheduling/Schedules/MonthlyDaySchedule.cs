@@ -7,10 +7,15 @@ using System.Collections;
 namespace Scheduling
 {
     /// <summary>
-    /// Uses day of week logic. i.e. Every X months on the 2nd Monday.
+    /// Represents a schedule that occurs every X months on a day of the week (e.g. on the 2nd Monday of each month).
     /// </summary>
     public class MonthlyDaySchedule : MonthlySchedule
     {
+        public override void Accept(IScheduleVisitor entity)
+        {
+            entity.Visit(this);
+        }
+
         public override IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from)
         {
             int week = GetWeek(start);
@@ -24,6 +29,11 @@ namespace Scheduling
             }
         }
 
+        /// <summary>
+        /// Gets an integer representing how many weeks into the month a particular date is.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static int GetWeek(DateTime date)
         {
             int week = ((int)Math.Floor((double)(date.Day - 1) / 7)) + 1;

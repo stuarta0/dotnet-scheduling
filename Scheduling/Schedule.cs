@@ -56,20 +56,10 @@ namespace Scheduling
         /// <returns></returns>
         public IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from, DateTime to)
         {
-            foreach (var d in GetOccurrences(start, from))
-            {
-                if (d > to)
-                    yield break;
-
-                yield return d;
-            }
+            return GetOccurrences(start, from).TakeWhile<DateTime>(dt => dt <= to);
         }
 
-        public void Accept(IScheduleVisitor entity)
-        {
-            entity.Visit(this);
-        }
-
+        public abstract void Accept(IScheduleVisitor entity);
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)

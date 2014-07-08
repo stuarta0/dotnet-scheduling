@@ -7,7 +7,11 @@ namespace Scheduling
 {
     public class YearlySchedule : Schedule
     {
-        //public override IList<DateTime> GetOccurences(DateTime start, DateTime end)
+        public override void Accept(IScheduleVisitor entity)
+        {
+            entity.Visit(this);
+        }
+
         public override IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from)
         {
             if (from <= start)
