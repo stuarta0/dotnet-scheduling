@@ -58,10 +58,9 @@
     <Compile Include="Schedules\MonthlyDaySchedule.cs" />
     <Compile Include="Schedules\YearlySchedule.cs" />
     <Compile Include="Schedules\MonthlySchedule.cs" />
-    <Compile Include="Strings.cs" />
+    <Compile Include="Formatters\Strings.cs" />
     <Compile Include="Schedules\WeeklySchedule.cs" />
     <Compile Include="Schedules\DailySchedule.cs" />
-    <Compile Include="Period.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schedule.cs" />
   </ItemGroup>
