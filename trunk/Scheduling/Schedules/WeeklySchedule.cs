@@ -6,6 +6,9 @@ using System.Collections;
 
 namespace Scheduling
 {
+    /// <summary>
+    /// Represents a schedule that occurs every X weeks, optionally on certain days of the week.
+    /// </summary>
     public class WeeklySchedule : Schedule
     {
         #region Local Variables
@@ -117,6 +120,11 @@ namespace Scheduling
         }
 
         #endregion
+
+        public override void Accept(IScheduleVisitor entity)
+        {
+            entity.Visit(this);
+        }
 
         //public override IList<DateTime> GetOccurences(DateTime start, DateTime end)
         public override IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from)

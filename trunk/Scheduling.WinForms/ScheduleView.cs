@@ -26,8 +26,8 @@ namespace Scheduling.WinForms
                 chkEndOn.Visible = _noEndAllowed;
                 lblEnding.Text = (_noEndAllowed ? "Ending:" : "Ending On:");
 
-                if (!_noEndAllowed && CurrentSchedule != null)
-                    CurrentSchedule.EndDate = DateTime.Today;
+                //if (!_noEndAllowed && CurrentSchedule != null)
+                //    CurrentSchedule.EndDate = DateTime.Today;
             }
         }
 
@@ -71,8 +71,8 @@ namespace Scheduling.WinForms
                 //e.Value = ((bool)e.Value == true ? (DateTime?)null : DateTime.Today);
                 if ((bool)e.Value == true)
                     e.Value = null;
-                else
-                    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
+                //else
+                //    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
             }
         }
 
@@ -93,8 +93,8 @@ namespace Scheduling.WinForms
                 //e.Value = ((bool)e.Value == true ? DateTime.Today : (DateTime?)null);
                 if ((bool)e.Value == true)
                     e.Value = dtpEndDate.Value;
-                else
-                    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
+                //else
+                //    e.Value = ((Schedule)((BindingSource)((Binding)sender).DataSource).Current).EndDate;
             }
         }
 
@@ -165,27 +165,27 @@ namespace Scheduling.WinForms
 
         private void CreateSchedule(ScheduleDisplayOption option)
         {
-            DateTime? existingStartDate = null;
-            if (CurrentSchedule != null)
-                existingStartDate = CurrentSchedule.StartDate;
+            //DateTime? existingStartDate = null;
+            //if (CurrentSchedule != null)
+            //    existingStartDate = CurrentSchedule.StartDate;
 
-            try
-            {
-                CurrentSchedule = option.CreateSchedule();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, "There was a problem creating the requested schedule.\n\n" + ex.Message, "Create Schedule", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            //try
+            //{
+            //    CurrentSchedule = option.CreateSchedule();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(this, "There was a problem creating the requested schedule.\n\n" + ex.Message, "Create Schedule", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
-            if (existingStartDate.HasValue)
-                CurrentSchedule.StartDate = existingStartDate.Value;
+            //if (existingStartDate.HasValue)
+            //    CurrentSchedule.StartDate = existingStartDate.Value;
 
-            if (!NoEndDateAllowed)
-                CurrentSchedule.EndDate = dtpEndDate.Value;
+            //if (!NoEndDateAllowed)
+            //    CurrentSchedule.EndDate = dtpEndDate.Value;
 
-            RebuildUI(option);
+            //RebuildUI(option);
         }   
 
         private void RebuildUI(ScheduleDisplayOption option)

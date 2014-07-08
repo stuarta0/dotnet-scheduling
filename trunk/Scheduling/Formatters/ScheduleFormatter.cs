@@ -1,45 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace Scheduling.Formatters
 {
-    public class BuiltInFormatter : IScheduleVisitor
+    /// <summary>
+    /// Handles creation of human-readable descriptions for all built-in schedule types.  Can be inherited and further schedule types defined.
+    /// </summary>
+    public class ScheduleFormatter : IScheduleVisitor, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Optional start date to include in the description.
+        /// </summary>
         public DateTime? Start { get; set; }
-        public BuiltInFormatter(DateTime? start = null)
+
+        /// <summary>
+        /// Gets the last description that was generated.
+        /// </summary>
+        public string Description { get; protected set; }
+
+        public ScheduleFormatter(DateTime? start = null)
         {
             Start = start;
             DescriptionChanged += delegate { };
+            PropertyChanged += delegate { };
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
         public delegate void ScheduleFormatEventHandler(object sender, ScheduleFormatEventArgs args);
+
+        /// <summary>
+        /// Event fired when formatter visited by schedule.  Useful for looping over schedules and getting descriptions.
+        /// </summary>
         public event ScheduleFormatEventHandler DescriptionChanged;
-        private void OnDescriptionChanged(ISchedule schedule, string description)
+        protected virtual void OnDescriptionChanged(ISchedule schedule, string description)
         {
+            Description = description;
             DescriptionChanged(this, new ScheduleFormatEventArgs(schedule, description));
+            PropertyChanged(this, new PropertyChangedEventArgs("Description"));
         }
 
-        public void Visit(ISchedule s)
-        {
-            // we can't do anything with an unknown schedule
-        }
+        /// <summary>
+        /// Visitor pattern for generating description for this schedule.  Will update Description and fire events.
+        /// </summary>
+        public virtual void Visit(DailySchedule s) { OnDescriptionChanged(s, Format(s)); }
 
-        public void Visit(DailySchedule s)
+        /// <summary>
+        /// Visitor pattern for generating description for this schedule.  Will update Description and fire events.
+        /// </summary>
+        public virtual void Visit(WeeklySchedule s) { OnDescriptionChanged(s, Format(s)); }
+
+        /// <summary>
+        /// Visitor pattern for generating description for this schedule.  Will update Description and fire events.
+        /// </summary>
+        public virtual void Visit(MonthlySchedule s) { OnDescriptionChanged(s, Format(s)); }
+
+        /// <summary>
+        /// Visitor pattern for generating description for this schedule.  Will update Description and fire events.
+        /// </summary>
+        public virtual void Visit(MonthlyDaySchedule s) { OnDescriptionChanged(s, Format(s)); }
+
+        /// <summary>
+        /// Visitor pattern for generating description for this schedule.  Will update Description and fire events.
+        /// </summary>
+        public virtual void Visit(YearlySchedule s) { OnDescriptionChanged(s, Format(s)); }
+        
+
+
+        /// <summary>
+        /// Gets the generated description for the schedule.  Will not update Description or fire events.
+        /// </summary>
+        public virtual string Format(DailySchedule s)
         {
             // Daily
             // Every 2 days
-             OnDescriptionChanged(s,
-                String.Format(
+             return String.Format(
                     Strings.Plural(s.Frequency, "Daily", "Every {0} days"),
                     s.Frequency
-                ));
-            //(EndDate.HasValue ? String.Format(", ending {0}", EndDate.Value.ToString("d MMMM yyyy")) : ""));
+                );
         }
 
 
-        public void Visit(WeeklySchedule s)
+        /// <summary>
+        /// Gets the generated description for the schedule.  Will not update Description or fire events.
+        /// </summary>
+        public virtual string Format(WeeklySchedule s)
         {
             // Weekly
             // Weekly on Sunday, Monday and Thursday
@@ -95,10 +142,13 @@ namespace Scheduling.Formatters
                 }
             }
 
-            OnDescriptionChanged(s, sb.ToString());
+            return sb.ToString();
         }
 
-        public void Visit(MonthlySchedule s)
+        /// <summary>
+        /// Gets the generated description for the schedule.  Will not update Description or fire events.
+        /// </summary>
+        public virtual string Format(MonthlySchedule s)
         {
             // Monthly on day 21
             // Every 6 months on day 21
@@ -112,11 +162,14 @@ namespace Scheduling.Formatters
             if (Start.HasValue)
                 sb.AppendFormat(" on day {0}", Start.Value.Day);
 
-            OnDescriptionChanged(s, sb.ToString());
+            return sb.ToString();
             //(EndDate.HasValue ? String.Format(", ending {0}", EndDate.Value.ToString("d MMMM yyyy")) : ""));
         }
 
-        public void Visit(MonthlyDaySchedule s)
+        /// <summary>
+        /// Gets the generated description for the schedule.  Will not update Description or fire events.
+        /// </summary>
+        public virtual string Format(MonthlyDaySchedule s)
         {
             // Monthly on the first Tuesday
             // Every 6 months on the last Saturday
@@ -129,7 +182,7 @@ namespace Scheduling.Formatters
             if (Start.HasValue)
                 sb.AppendFormat(" on the {0} {1}", GetDescriptiveWeek(MonthlyDaySchedule.GetWeek(Start.Value)), Start.Value.DayOfWeek);
 
-            OnDescriptionChanged(s, sb.ToString());
+            return sb.ToString();
             //(EndDate.HasValue ? String.Format(", ending {0}", EndDate.Value.ToString("d MMMM yyyy")) : ""));
         }
         private string GetDescriptiveWeek(int weekNumber)
@@ -146,7 +199,10 @@ namespace Scheduling.Formatters
             return string.Empty;
         }
 
-        public void Visit(YearlySchedule s)
+        /// <summary>
+        /// Gets the generated description for the schedule.  Will not update Description or fire events.
+        /// </summary>
+        public virtual string Format(YearlySchedule s)
         {
             // Annually on April 12
             // Every 2 years on April 12
@@ -159,8 +215,9 @@ namespace Scheduling.Formatters
             if (Start.HasValue)
                 sb.AppendFormat(" on {0}", Start.Value.ToString("MMMM d"));
 
-            OnDescriptionChanged(s, sb.ToString());
+            return sb.ToString();
             //(EndDate.HasValue ? String.Format(", ending {0}", EndDate.Value.ToString("d MMMM yyyy")) : ""));
         }
+
     }
 }
