@@ -17,6 +17,9 @@ namespace Examples
             Console.WriteLine("\nPersistence Example:");
             new Persistence.Example();
 
+            Console.WriteLine("\nExtending Example:");
+            new Extending.Example();
+
             Console.WriteLine("Done");
             Console.ReadKey();
         }
