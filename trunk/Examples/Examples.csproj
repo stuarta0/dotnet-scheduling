@@ -42,6 +42,11 @@
   <ItemGroup>
     <Compile Include="Calendar\CalendarSchedule.cs" />
     <Compile Include="Calendar\Example.cs" />
+    <Compile Include="Extending\Example.cs" />
+    <Compile Include="Extending\ExtendedFormatter.cs" />
+    <Compile Include="Extending\IExtendedSchedule.cs" />
+    <Compile Include="Extending\IExtendedScheduleVisitor.cs" />
+    <Compile Include="Extending\LeapYearSchedule.cs" />
     <Compile Include="Formatting\CustomFormatter.cs" />
     <Compile Include="Formatting\Example.cs" />
     <Compile Include="Persistence\DbSchedule.cs" />
