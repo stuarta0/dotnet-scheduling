@@ -18,7 +18,7 @@ new ScheduleFormatter().Format(schedule)
 
 `ScheduleFormatter` can be inherited, allowing the user to override specific description behaviour where necessary.
 
-If the type of schedule is unknown, it's best to use the visitor pattern via the `Accept()` method.  Since this function has no return type, the description is stored within the formatter object (if only one schedule description is required).  If multiple descriptions are generated, use the event handler.  Both options are shown below:
+If the type of schedule is unknown, it's best to use the visitor pattern via the `Accept()` method.  Since this function has no return type, the description is stored within the formatter object (if only one schedule description is required).  If multiple descriptions are generated, use the `DescriptionChanged` event handler.  Both options are shown below:
 {{{
 var formatter = new ScheduleFormatter();
 formatter.DescriptionChanged += (sender, args) => {
@@ -30,3 +30,17 @@ schedule.Accept(formatter);
 
 // alternatively, the description property will contain the last generated description
 formatter.Description; 
+}}}
+
+Another benefit to using this formatter object is that we can extend it and provide custom descriptions based on our current spec.  By using the existing `ScheduleFormatter` we get all the default behaviour with our required changes:
+{{{
+public class CustomFormatter : ScheduleFormatter
+{
+    public override string Format(WeeklySchedule s)
+    {
+        if (s.Frequency == 2)
+            return "Fortnightly";
+        return base.Format(s);
+    }
+}
+}}}
