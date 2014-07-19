@@ -23,8 +23,7 @@ namespace Examples.Formatting
         {
             if (s.Frequency == 2)
                 return "Fortnightly"; // to be complete this should output which days that occur fortnightly
-            else
-                return base.Format(s);
+            return base.Format(s);
         }
 
         /// <summary>
@@ -34,8 +33,7 @@ namespace Examples.Formatting
         {
             if (s.Frequency == 3)
                 return String.Format(String.Concat("Quarterly", (Start.HasValue ? " on day {0}" : "")), Start.Value.Day);
-            else
-                return base.Format(s);
+            return base.Format(s);
         }
     }
 }
