@@ -29,13 +29,8 @@ namespace Examples.Calendar
                 to = EndDate.Value;
 
             var result = new List<DateTime>();
-            foreach (var d in Schedule.GetOccurrences(StartDate, from))
-            {
-                if (d > to)
-                    break;
-
+            foreach (var d in Schedule.GetOccurrences(StartDate, from).TakeWhile<DateTime>(dt => dt <= to))
                 result.Add(d);
-            }
 
             return result;
         }

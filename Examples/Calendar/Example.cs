@@ -27,9 +27,9 @@ namespace Examples.Calendar
                 new ScheduleFormatter().Format((DailySchedule)calendar.Schedule), calendar.EndDate);
             
 
-            // occurrences.Length = number of 5 day blocks within 1 month period (from between 1 to 2 months from now)
-            // since GetOccurrences() starts 1 month from now, but has an EndDate 2 months from now, even though the 
-            // following call asks for up to 100 years time.
+            // occurrences.Length = number of 5 day blocks within 1 month period (from between 1 to 2 months from now).
+            // Since GetOccurrences() starts 1 month from now, but has an EndDate 2 months from now, it will only return
+            // a small subset even though the following call asks for up to 100 years time (EndDate takes precedence)
             var from = now.AddMonths(1);
             var to = now.AddYears(100);
             var occurrences = calendar.GetOccurrences(from, to);
