@@ -103,11 +103,27 @@ namespace Scheduling.Tests
             var month = new MonthlySchedule { Frequency = 1 };
             IList<DateTime> occurrences = month.GetOccurrences(
                 new DateTime(2011, 8, 1, 14, 30, 0),
-                new DateTime(2011, 8, 17), 
+                new DateTime(2011, 8, 17),
                 new DateTime(2011, 10, 1, 11, 0, 0)).ToList();
 
             Assert.AreEqual(1, occurrences.Count);
             Assert.AreEqual(new DateTime(2011, 9, 1, 14, 30, 0), occurrences[0]);
+        }
+
+        [TestMethod]
+        public void Occurrences_day_of_month_last_with_time_component()
+        {
+            var month = new MonthlySchedule { Frequency = 1 };
+            IList<DateTime> occurrences = month.GetOccurrences(
+                new DateTime(2020, 1, 31, 14, 30, 0),
+                new DateTime(2020, 1, 31),
+                new DateTime(2021, 1, 1)).ToList();
+
+            Assert.AreEqual(12, occurrences.Count);
+            Assert.AreEqual(new DateTime(2020, 1, 31, 14, 30, 0), occurrences[0]);
+            Assert.AreEqual(new DateTime(2020, 2, 29, 14, 30, 0), occurrences[1]);
+            Assert.AreEqual(new DateTime(2020, 3, 31, 14, 30, 0), occurrences[2]);
+            Assert.AreEqual(new DateTime(2020, 4, 30, 14, 30, 0), occurrences[3]);
         }
     }
 }

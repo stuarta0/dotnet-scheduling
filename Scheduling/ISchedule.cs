@@ -7,6 +7,10 @@ namespace Scheduling
 {
     public interface ISchedule
     {
+        /// <summary>
+        /// A schedule that occurs at this given frequency.
+        /// </summary>
+        /// <example>A frequency of 2 for a weekly schedule means a schedule that occurs every 2 weeks.</example>
         int Frequency { get; set; }
 
         /// <summary>

@@ -19,12 +19,13 @@ namespace Scheduling
         public override IEnumerable<DateTime> GetOccurrences(DateTime start, DateTime from)
         {
             DateTime cur = start;
+            int i = 1;
             while (true)
             {
                 if (cur >= from)
                     yield return cur;
 
-                cur = cur.AddMonths(Frequency);
+                cur = start.AddMonths(Frequency * i++);
             }
         }
     }
